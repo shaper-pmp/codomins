@@ -1,0 +1,93 @@
+<html>
+<head>
+	<style type="text/css">
+	
+table {
+	font-size: smaller;
+	margin: 1em 0;
+}
+td {
+	border: 1px solid #c0c0c0;
+	padding: 5px;
+}
+.good {
+	color: #008000;
+}
+.bad {
+	color: #800000;
+}
+	</style>
+</head>
+<body>
+
+	
+<p>Methods to hide content from browsers:</p>
+
+<table>
+	<tr>
+		<th>Method</th>
+		<th>Minimum client requirements</th>
+		<th>Complicates caching</th>
+		<th>Requires HTTP redirects/server-side browser sniffing</th>
+		<th>Requires additional HTTP requests for conditional content</th>
+		<th>Unnecessary markup downloaded by client</th>
+		<th>Unnecessary linked resources downloaded by client</th>
+		<th>Unnecessary content parsed and added to DOM by client</th>
+		<th>Unnecessary content styled by client</th>
+		<th>Easily retrofitted to existing sites</th>
+	</tr>
+	<tr>
+		<th>Serve different HTML to different devices</th>
+		<td>HTML/HTTP</td>
+		<td class="bad">Yes</td>
+		<td class="bad">Yes</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="bad">No</td>
+	</tr>
+	<tr>
+		<th>Hide conditional content with CSS (display: none;)</th>
+		<td>CSS</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="bad">Yes</td>
+		<td class="bad">Yes</td>
+		<td class="bad">Yes</td>
+		<td class="bad">Yes</td>
+		<td class="good">Yes</td>
+	</tr>
+	<tr>
+		<th>Load conditional content via AJAX</th>
+		<td>Javascript</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="bad">Yes</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="bad">No</td>
+	</tr>
+	<tr>
+		<th>Load conditional content in HTML comments</th>
+		<td>Javascript</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="bad">Yes</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="good">No</td>
+		<td class="good">Yes</td>
+	</tr>
+	
+</table>
+
+<a href="codomins-demo.html">&lt; Back to demo</a>
+	
+</body>
+</html>

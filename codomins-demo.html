@@ -1,0 +1,106 @@
+<head>
+	<title>Conditional DOM Insertion Demo</title>
+		
+	<script type="text/javascript" src="codomins.js"></script>
+	<script type="text/javascript">
+/* <![CDATA[ */
+	function dump(val) {
+		if(typeof console != "undefined") {
+			console.log(val);
+		}
+		else {
+			document.getElementById("output").innerHTML += "<br />"+val;
+		}
+	}
+/* ]]> */
+	</script>
+	<style type="text/css">
+/* <![CDATA[ */
+.output {
+	border: 1px solid #c0c0c0;
+	margin-left: 0.5em;
+}
+.success {
+	color: #008000;
+}
+.failure  {
+	color: #800000;
+}
+
+p img {
+	vertical-align: bottom;
+}
+/* ]]> */
+	</style>
+
+	<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>
+
+</head>
+<body>
+	
+<p>View the page-source in your browser to see the conditional comments.  Then press the button below to extract this content from the comments and insert it into the page in the appropriate places.</p>
+
+<p><input type="button" onclick="codomins.init();" value="Show conditional content" /></p>
+
+<p>Initial (non-conditional) paragraph</p>
+
+<!---[false]- This should never appear - it's just here to ensure odd characters don't trip up validation & < / > ]]> -->
+
+<p>Paragraph with regular comment that shouldn't appear: <span class="output failure"><!-- This content should never appear --></span></p>
+
+<p>Paragraph with disabled conditional comment that shouldn't appear: <span class="output failure"><!---[false]- This content should never appear --></span></p>
+
+<p>Paragraph with raw text node (non-HTML-element) conditional content: <span class="output success"><!---[true]- Success --></span></p>
+
+<p>Paragraph with HTML element conditional comment: <span class="output success"><!---[true]- <span>Success</span> --></span></p>
+
+<p>Paragraph with mixed HTML element and raw text conditional content: <span class="output success"><!---[true]- Succ<span>ess</span> --></span></p>
+
+<div>Conditional block-level HTML element: <!---[true]- <p class="output success">Success</p> --></div>
+
+<p>Paragraph with an image, which is not loaded until the conditional content is inserted into the DOM: <span class="output success"><!---[true]- <img src="success.png" alt="" /> --></span></p>
+
+<p>Paragraph with in-line stylesheet: <span class="output success" id="style-element-target-internal" style="visibility:hidden;">Success</span><!---[true]- <style type="text/css">#style-element-target-internal { visibility:visible!important; } </style> --></p>
+
+<p>Paragraph with external stylesheet: <span class="output success" id="style-element-target-external" style="visibility:hidden;">Success</span><!---[true]- <link rel="stylesheet" media="all" type="text/css" href="codomins-helper.css" /> --></p>
+
+<p>Paragraph with in-line script: <span class="output success" id="dynamic-element-target-internal"></span><!---[true]- <script type="text/javascript">
+	document.getElementById('dynamic-element-target-internal').innerHTML = 'Success';
+</script> --></p>
+
+<p>Paragraph with external script: <span class="output success" id="dynamic-element-target-external"></span><!---[true]- <script type="text/javascript" src="codomins-helper.js"></script> --></p>
+
+<p>Final (non-conditional) paragraph</p>
+
+<hr />
+
+<h2>Reload with different Content-Type/DocType</h2>
+
+<form action="codomins-demo.php" method="get">
+	<h3>Content-type</h3>
+	<p><label><input type="radio" name="content-type" value="text/html" />text/html</label></p>
+	<p><label><input type="radio" name="content-type" value="application/xhtml+xml" />application/xhtml+xml</label></p>
+	<p><label><input type="radio" name="content-type" value="application/xml" />application/xml</label></p>
+	
+	<h3>DocType</h3>
+	
+	<p><label><input type="radio" name="doctype" value="html4_transitional" />HTML 4 Transitional</label></p>
+	<p><label><input type="radio" name="doctype" value="html4_strict" />HTML 4 Strict</label></p>
+	<p><label><input type="radio" name="doctype" value="xhtml1.0_transitional" />XHTML 1.0 Transitional</label></p>
+	<p><label><input type="radio" name="doctype" value="xhtml1.0_strict" />XHTML 1.0 Strict</label></p>
+	<p><label><input type="radio" name="doctype" value="xhtml1.1" />XHTML 1.1</label></p>
+	<p><label><input type="radio" name="doctype" value="xhtmlbasic1.1" />XHTML Basic 1.1</label></p>
+	<p><label><input type="radio" name="doctype" value="html5" />HTML5</label></p>
+	
+	<p><input type="submit" value="Reload" /></p>
+</form>
+
+<div id="output"></div>
+
+<p>
+	<a href="index.html">&lt; Back to main site</a>
+	<a href="codomins-rationale.html">Rationale &gt;</a>
+</p>
+
+</body>
+</html>
