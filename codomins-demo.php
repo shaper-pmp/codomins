@@ -1,4 +1,7 @@
 <?php
+  
+  /* Simple stub to serve codomins-demo.html with varying content-types/DOCTYPEs for testing purposes. */
+  
   $doctypes = array(
 	'html4_transitional'	=> '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html>',
 	'html4_strict'			=> '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html>',
