@@ -143,7 +143,7 @@ p img {
     </div>
 
     <div class="test">
-      <p class="title">Paragraph with in-line stylesheet:</p>
+      <p class="title">Paragraph with in-page stylesheet:</p>
       <p class="dynamic">Dynamic code: <span class="output success" id="style-element-target-internal-dynamic" style="visibility:hidden;">Success</span><!---[true]- <style type="text/css">#style-element-target-internal-dynamic { visibility:visible!important; } </style> --></p>
      <p class="static">Static equivalent: <span class="output success" id="style-element-target-internal-static" style="visibility:hidden;">Success</span> <style type="text/css">#style-element-target-internal-static { visibility:visible!important; } </style> </p>
     </div>
@@ -155,12 +155,24 @@ p img {
     </div>
 
     <div class="test">
-      <p class="title">Paragraph with in-line script:</p>
+      <p class="title">Paragraph with in-page script:</p>
       <p class="dynamic">Dynamic code: <span class="output success" id="dynamic-element-target-internal-dynamic"></span><!---[true]- <script type="text/javascript">
 	    document.getElementById('dynamic-element-target-internal-dynamic').innerHTML = 'Success';
+	    if(!window.dynamic_element_target_internal_dynamic) {
+          window.dynamic_element_target_internal_dynamic = true;
+      }
+      else {
+        alert("Error - window.dynamic_element_target_internal_dynamic already exists - this code has somehow been run twice!");
+      }
     </script> --></p>
       <p class="static">Static equivalent: <span class="output success" id="dynamic-element-target-internal-static"></span><script type="text/javascript">
 	    document.getElementById('dynamic-element-target-internal-static').innerHTML = 'Success';
+	    if(!window.dynamic_element_target_internal_static) {
+	    	  window.dynamic_element_target_internal_static = true;
+	    }
+	    else {
+	      alert("Error - window.dynamic_element_target_internal_static already exists - this code has somehow been run twice!");
+	    }
     </script></p>
     </div>
 

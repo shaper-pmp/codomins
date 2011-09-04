@@ -20,11 +20,11 @@ var codomins = function () {
 		
 		setContent: function(element, content) {
 			if(document.contentType == "application/xml") {
-				parser = new DOMParser()
+				parser = new DOMParser();
 				var doc = parser.parseFromString('<div xmlns="http://www.w3.org/1999/xhtml">' + content + '<\/div>', 'application/xml');
 				var root = doc.documentElement;
 				for (var i=0; i < root.childNodes.length; ++i) {
-					element.appendChild(document.importNode(root.childNodes[i], true))
+					element.appendChild(document.importNode(root.childNodes[i], true));
 				}
 			}
 			else {
@@ -38,69 +38,97 @@ var codomins = function () {
 		},
 		
 		init: function(root) {
-			var comments = this.findComments(root);
+			var comments = this.findComments(root);	// Find all correctly-formatted codomins comment nodes (<!---[condition]-content-->)
 			var starttoken = "-[";
 			var endtoken = "]-";
 
 			var container = document.createElement('div');				
 			document.getElementsByTagName("body")[0].appendChild(container);	// Insert the container element so that child elements are actually fully-constructed and definitely accessible through container.childNodes
 			
-			for(var i=0; i<comments.length; i++) {
+			for(var i=0; i<comments.length; i++) {	// Iterate over codoimins comments
 				var nodecontents = comments[i].nodeValue;
-				if(nodecontents.indexOf(starttoken) == 0) {
+				if(nodecontents.indexOf(starttoken) == 0) {	// Check for false matches by ignoring comments unless the condition marker (-[condition]-) is the first thing in the comment
 					var endpos = nodecontents.indexOf(endtoken)+endtoken.length;
 					var condition = nodecontents.substr(starttoken.length, endpos-starttoken.length-endtoken.length);
 					var content = nodecontents.substr(endpos);
 					
-					if(eval(condition)) {
+					if(eval(condition)) {	// If embedded condiution evaluates to true:
 					
-						this.setContent(container, content);
-						
-						/*container.innerHTML = content;
-						dump(typeof container.innerHTML);
-						
-						if(container.innerHTML != content) {	// Work around nasty IE bug where script and style elements are stripped out if they don't have any "visible" leading content
-							container.innerHTML = "<span>_</span>"+content;
-							container.removeChild(container.firstChild);
-						}*/
+						this.setContent(container, content);	// Set the comment's container's contents to the contents of the comment (basically snip the comment out of the DOM and set its children to be the children of the comment's parent)
+
+						// This is all we need to do for all static elements, but with certain doctype/content-type combinations stylesheets and scripts must be handled specially or they won't be parsed/executed once they're inserted:
 						
 						var childnodes = container.childNodes;	// Not div.children, because we also want anonymous text nodes as well as elements
 						while(childnodes.length) {
-							var node = childnodes.item(0);
-							var tagname = node.tagName;
-							if(tagname && tagname.toLowerCase() == "script") {
-								if(node.src) {	// Link to external script
-									var script = document.createElement('script');	// Dynamically inserting script nodes by setting container.innerHTML doesn't trigger the browser to execute the script, so we force it by manually creating a new script element, removing the old one and attaching the new one instead.
-									script.setAttribute('type', 'text/javascript');
-									script.setAttribute('src', node.src);
-									/*script.type = 'text/javascript';
-									script.src = node.src;*/
-									container.removeChild(node);	// Get rid of old (non-executed) script
-									node = script;					// And substitute new one
+							var node = container.removeChild(childnodes.item(0)); // Remove node from temporary "rendering container", prior to inserting it wherever it needs to go in the DOM
+							if(node.tagName) {
+								var tagnamelc = node.tagName.toLowerCase();
+								if(tagnamelc == "script") {
+									this.reattachDynamicElement(node, comments[i].parentNode, comments[i].beforeNode);
 								}
-								else {	// In-line code in script element
-									var code = null;
-									if(typeof node.innerHTML != "undefined") {
-										code = node.innerHTML;
-									}
-									else {
-										code = node.textContent;
-									}
-									eval(code);
+								else if(tagnamelc == "style" || (tagnamelc == "link" && node.rel.match(/stylesheet/))) {
+									var headelement = document.getElementsByTagName('head')[0];
+									this.reattachDynamicElement(node, headelement, headelement.lastChild);
+								}
+								else {
+									comments[i].parentNode.insertBefore(node, comments[i].beforeNode);
 								}
 							}
 							else {
-								container.removeChild(node);
+								comments[i].parentNode.insertBefore(node, comments[i].beforeNode);
 							}
-							
-							comments[i].parentNode.insertBefore(node, comments[i].beforeNode);
 						}
 						
-						comments[i].parentNode.removeChild(comments[i]);
+						comments[i].parentNode.removeChild(comments[i]);	// And remove original codomins comment node
 					}
 				}
 			}
 			window.document.getElementsByTagName("body")[0].removeChild(container);
+		},
+		
+		reattachDynamicElement: function(node, newparent, nextsibling) {
+			var tagnamelc = node.tagName.toLowerCase();
+			if(tagnamelc == 'script') {
+				if(node.src) {	// Link to external script
+					var script = document.createElement(node.tagName);	// Dynamically inserting script nodes by setting container.innerHTML doesn't trigger the browser to execute the script, so we force it by manually creating a new script element, removing the old one and attaching the new one instead.
+					console.log(node);
+					for(index in node.attributes) {
+						if(node.attributes[index].name) {
+							var attribname = node.attributes[index].name;
+							script.setAttribute(attribname, node[attribname]);
+						}
+					}
+					newparent.insertBefore(script, nextsibling);
+				}
+				else {	// In-page script element
+					var code = null;
+					if(typeof node.innerHTML != "undefined") {
+						code = node.innerHTML;
+					}
+					else {
+						code = node.textContent;
+					}
+					eval(code);
+					newparent.insertBefore(node, nextsibling);	// Don't really need to insert this here because we already evaluated it, but it's good to leave it in the DOM for completeness' sake, and we already know it won't be evaluated if it's included
+				}
+			}
+			if(tagnamelc == "style" || (tagnamelc == "link" && node.rel.match(/stylesheet/))) {
+				if(node.href) {	// Link to external stylesheet
+					var link = document.createElement(node.tagName);	// Dynamically inserting script nodes by setting container.innerHTML doesn't trigger the browser to execute the script, so we force it by manually creating a new script element, removing the old one and attaching the new one instead.
+					for(index in node.attributes) {
+						if(node.attributes[index].name) {
+							var attribname = node.attributes[index].name;
+							link.setAttribute(attribname, node[attribname]);
+						}
+					}
+					newparent.insertBefore(link, nextsibling);
+
+				}
+				else {	// In-page stylesheet
+					newparent.insertBefore(node, nextsibling);
+					console.log("In-page stylesheet");
+				}
+			}
 		}
 	};
 }();
