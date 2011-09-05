@@ -126,6 +126,8 @@ A demo/testing page is included in this repository - host `codomins-demo.php` on
 
 Using the form at the bottom you can also instruct the page to reload itself with a variety of content-types and DOCTYPEs - very useful for testing, as the same browser will often behave wildly differently depending on the content-type and DOCTYPE selected, and it's important to check every combination for bugs/omissions.
 
+New: there's now an on-line version of the demo/testing page at http://www.shaper-labs.com/projects/codomins/codomins-demo.php for the curious to play with.
+
 ##Conclusion##
 			
 There is no "magic bullet" to making sites (even legacy ones) more mobile-friendly.  However, this technique seems to be a very useful addition to existing techniques like AJAX and hiding elements with CSS.  In particular the ease with which it may be retrofitted to existing sites is potentially extremely useful for making sites more mobile-friendly without incurring huge redevelopment effort.
