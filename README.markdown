@@ -131,3 +131,7 @@ New: there's now an on-line version of the demo/testing page at [http://www.shap
 ##Conclusion##
 			
 There is no "magic bullet" to making sites (even legacy ones) more mobile-friendly.  However, this technique seems to be a very useful addition to existing techniques like AJAX and hiding elements with CSS.  In particular the ease with which it may be retrofitted to existing sites is potentially extremely useful for making sites more mobile-friendly without incurring huge redevelopment effort.
+
+##Source Code##
+
+Work-in-progress codomins source code is available [on github](http://www.github.com/shaper-pmp/codomins).
