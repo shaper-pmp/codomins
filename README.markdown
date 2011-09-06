@@ -126,7 +126,7 @@ A demo/testing page is included in this repository - host `codomins-demo.php` on
 
 Using the form at the bottom you can also instruct the page to reload itself with a variety of content-types and DOCTYPEs - very useful for testing, as the same browser will often behave wildly differently depending on the content-type and DOCTYPE selected, and it's important to check every combination for bugs/omissions.
 
-New: there's now an on-line version of the demo/testing page at http://www.shaper-labs.com/projects/codomins/codomins-demo.php for the curious to play with.
+New: there's now an on-line version of the demo/testing page at [http://www.shaper-labs.com/projects/codomins/codomins-demo.php](http://www.shaper-labs.com/projects/codomins/codomins-demo.php) for the curious to play with.
 
 ##Conclusion##
 			
