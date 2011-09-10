@@ -12,7 +12,7 @@
 	'html5'					=> '<!DOCTYPE HTML><html><head>',
   );
   $contenttype = '';
-  if(!empty($_REQUEST['content-type']) && preg_match('¬^([a-z0-9_\-\+]+/[a-z0-9_\-\+]+)¬', $_REQUEST['content-type'], $matches)) {
+  if(!empty($_REQUEST['content-type']) && preg_match('#^([a-z0-9_\-\+]+/[a-z0-9_\-\+]+)#', $_REQUEST['content-type'], $matches)) {
     $contenttype = $matches[1];
   }
   else {
@@ -21,7 +21,7 @@
   
   header('Content-type: '.$contenttype);
 
-  if(!empty($_REQUEST['doctype']) && preg_match('¬^([a-z0-9_\.]+)¬', $_REQUEST['doctype'], $matches) && array_key_exists($matches[1], $doctypes)) {
+  if(!empty($_REQUEST['doctype']) && preg_match('#^([a-z0-9_\.]+)#', $_REQUEST['doctype'], $matches) && array_key_exists($matches[1], $doctypes)) {
    	print($doctypes[$matches[1]]);
   }
   else {
@@ -30,5 +30,5 @@
   
   print("\n".'<meta http-equiv="content-type" content="'.$contenttype.';charset=UTF-8" />');
 
-  $demopage = file_get_contents('codomins-demo.html');
+  $demopage = file_get_contents('assets/codomins-demo.html');
   print($demopage);
