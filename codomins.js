@@ -91,11 +91,17 @@ var codomins = function () {
 			if(tagnamelc == 'script') {
 				if(node.src) {	// Link to external script
 					var script = document.createElement(node.tagName);	// Dynamically inserting script nodes by setting container.innerHTML doesn't trigger the browser to execute the script, so we force it by manually creating a new script element, removing the old one and attaching the new one instead.
-					console.log(node);
-					for(index in node.attributes) {
-						if(node.attributes[index].name) {
-							var attribname = node.attributes[index].name;
-							script.setAttribute(attribname, node[attribname]);
+					if(node.attributes) {
+						for(var index in node.attributes) {
+							if(node.attributes[index] && node.attributes[index].nodeName) {
+								var attribname = node.attributes[index].nodeName;
+								script.setAttribute(attribname, node.attributes[index].nodeValue);
+							}
+						}
+					}
+					else {
+						for(var index in node) {
+							script[index] = node[index];
 						}
 					}
 					newparent.insertBefore(script, nextsibling);
@@ -115,10 +121,17 @@ var codomins = function () {
 			if(tagnamelc == "style" || (tagnamelc == "link" && node.rel.match(/stylesheet/))) {
 				if(node.href) {	// Link to external stylesheet
 					var link = document.createElement(node.tagName);	// Dynamically inserting script nodes by setting container.innerHTML doesn't trigger the browser to execute the script, so we force it by manually creating a new script element, removing the old one and attaching the new one instead.
-					for(index in node.attributes) {
-						if(node.attributes[index].name) {
-							var attribname = node.attributes[index].name;
-							link.setAttribute(attribname, node[attribname]);
+					if(node.attributes) {
+						for(var index in node.attributes) {
+							if(node.attributes[index] && node.attributes[index].nodeName) {
+								var attribname = node.attributes[index].nodeName;
+								link.setAttribute(attribname, node.attributes[index].nodeValue);
+							}
+						}
+					}
+					else {
+						for(var index in node) {
+							link[index] = node[index];
 						}
 					}
 					newparent.insertBefore(link, nextsibling);
@@ -126,7 +139,6 @@ var codomins = function () {
 				}
 				else {	// In-page stylesheet
 					newparent.insertBefore(node, nextsibling);
-					console.log("In-page stylesheet");
 				}
 			}
 		}
